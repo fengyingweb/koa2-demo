@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
+const cors = require('koa2-cors'); // 引入跨域中间件
 const Router = require('koa-router');
 const app = new Koa();
 // const mongoose = require('mongoose');
@@ -27,7 +28,9 @@ router.use('/user', user.routes())
 //     console.log('------------------')
 //   });
 // })();
-app.use(bodyParser());
+
+app.use(cors()); // 配置跨域
+app.use(bodyParser()); // 配置body，post请求时需要使用ctx.request.body
 
 app
   .use(router.routes())
