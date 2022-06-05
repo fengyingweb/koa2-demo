@@ -51,7 +51,7 @@ router.post('/login', async(ctx)=> {
           ctx.body = {
             code: 0,
             data: resMatch,
-            msg: '登录失败'
+            msg: '登录失败,密码错误'
           }
         }
       } catch (errM) {
