@@ -42,12 +42,10 @@ const connect = ()=> {
 }
 
 const initSchemas = ()=> {
-  console.log(glob.sync(resolve(__dirname, './schema', '**/*.js')));
   glob.sync(resolve(__dirname, './schema', '**/*.js')).forEach(require)
 }
 
 module.exports = {
-  mongoose,
   connect,
   initSchemas
 }
