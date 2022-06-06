@@ -13,10 +13,12 @@ const router = new Router({
 });
 
 // 子路由
-const user = require('./api/user.js');
+const user = require('./appApi/user.js');
+const goods = require('./appApi/goods.js');
 
 // 装载所有子路由
 router.use('/user', user.routes());
+router.use('/goods', goods.routes());
 
 // 加载路由中间件
 app
