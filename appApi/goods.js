@@ -2,7 +2,6 @@ const Router = require('koa-router');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const {resolve} = require('path');
-const { route } = require('./user');
 const router = new Router();
 
 // 导入商品详情数据
