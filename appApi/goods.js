@@ -79,6 +79,24 @@ router.get('/insertAllCategorySub', async(ctx)=> {
   ctx.body = '开始导入数据'
 })
 
+// 获取所有商品信息
+router.get('/getAllGoodsInfo', async(ctx)=> {
+  const Goods = mongoose.model('Goods');
+  try {
+    const res = await Goods.find().exec();
+    ctx.body = {
+      code: 0,
+      data: res,
+      msg: res.length ? '获取成功' : '暂无数据'
+    }
+  } catch (err) {
+    ctx.body = {
+      code: 1,
+      msg: err.message || '获取商品数据失败'
+    }
+  }
+})
+
 // 获取商品详细信息的接口
 router.post('/getDetailGoodsInfo', async(ctx)=> {
   let goodsId = ctx.request.body.goodsId
