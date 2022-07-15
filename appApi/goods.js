@@ -136,8 +136,8 @@ router.get('/getCategoryList', async(ctx)=> {
 })
 
 // 获取商品小类数据
-router.get('/getCategorySubList', async(ctx)=> {
-  let {categoryId} = ctx.query;
+router.post('/getCategorySubList', async(ctx)=> {
+  let {categoryId} = ctx.request.body;
   console.log(categoryId);
   try {
     const CategorySub = mongoose.model('CategorySub');
@@ -158,6 +158,7 @@ router.get('/getCategorySubList', async(ctx)=> {
 // 根据商品类别获取商品列表,分页查询
 router.post('/getGoodsListByCategorySubID', async(ctx)=> {
   let {categorySubId, pageNo, pageSize} = ctx.request.body;
+  pageSize = pageSize || 10;
   let start = (pageNo - 1) * pageSize;
   try {
     const Goods = mongoose.model('Goods');
