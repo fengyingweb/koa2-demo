@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 
 router.get('/', async ctx => {
   ctx.body = '注册首页';
@@ -10,20 +11,35 @@ router.get('/', async ctx => {
 router.post('/register', async(ctx)=> {
   // 获取model
   const User = mongoose.model('User');
-  // 接受post数据
-  let newUser = new User(ctx.request.body);
-  await newUser.save().then(()=> {
-    ctx.body = {
-      code: 0,
-      data: null,
-      msg: '注册成功'
+  const userId = new ObjectId()
+  console.log(userId)
+  try {
+    let result = await User.findOne({userName: ctx.request.body.userName}).exec();
+    console.log(result)
+    if (result) {
+      ctx.body = {
+        code: 2,
+        data: result,
+        msg: '用户名被注册了'
+      }
+    } else {
+      // 接受post数据
+      let newUser = new User({...ctx.request.body, userId});
+      await newUser.save().then(()=> {
+        ctx.body = {
+          code: 0,
+          data: null,
+          msg: '注册成功'
+        }
+      }).catch(err=> {
+        ctx.body = {
+          code: 1,
+          data: null,
+          msg: err.message || '注册失败'
+        }
+      })
     }
-  }).catch(err=> {
-    ctx.body = {
-      code: 1,
-      msg: err.message || '注册失败'
-    }
-  })
+  } catch (error) {}
 })
 
 // 登录接口
@@ -58,12 +74,14 @@ router.post('/login', async(ctx)=> {
         console.log(errM)
         ctx.body = {
           code: 1,
+          data: null,
           msg: errM
         }
       }
     } else {
       ctx.body = {
         code: 2,
+        data: null,
         msg: '用户名不存在'
       }
     }
@@ -71,6 +89,7 @@ router.post('/login', async(ctx)=> {
     console.log(err);
     ctx.body = {
       code: 1,
+      data: null,
       msg: err.message || '登录失败'
     }
   }
