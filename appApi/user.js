@@ -60,13 +60,25 @@ router.post('/login', async(ctx)=> {
         if (resMatch) {
           ctx.body = {
             code: 0,
-            data: resMatch,
+            data: {
+              isLogin: resMatch,
+              userInfo: {
+                userId: result.userId,
+                userName: result.userName
+              }
+            },
             msg: '登录成功'
           }
         } else {
           ctx.body = {
             code: 0,
-            data: resMatch,
+            data: {
+              isLogin: resMatch,
+              userInfo: {
+                userId: result.userId,
+                userName: result.userName
+              }
+            },
             msg: '登录失败,密码错误'
           }
         }
