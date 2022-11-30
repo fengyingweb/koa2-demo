@@ -4,6 +4,34 @@ const fs = require('fs');
 const {resolve} = require('path');
 const router = new Router();
 
+// 导入首页数据
+router.get('/insertHome', async(ctx)=> {
+  fs.readFile(resolve(__dirname, '../data_json', 'home.json'), 'utf8', (err, data)=> {
+    if (err) {
+      console.log('读取数据失败')
+      return;
+    }
+    let jsonData = JSON.parse(data);
+    const Home = mongoose.model('Home');
+    let newHome = new Home(jsonData);
+    newHome.save().then(()=> {
+      console.log('导入数据成功')
+      ctx.body = {
+        data: '导入数据成功'
+      }
+    }).catch(error => {
+      console.log(error)
+      ctx.body = {
+        data: '导入数据失败',
+        msg: error
+      }
+    })
+    ctx.body = {
+      data: '开始导入数据'
+    }
+  })
+})
+
 // 导入商品详情数据
 router.get('/insertAllGoodsInfo', async(ctx)=> {
   fs.readFile(resolve(__dirname, '../data_json', 'newGoods.json'), 'utf8', (err, data)=> {
@@ -77,6 +105,24 @@ router.get('/insertAllCategorySub', async(ctx)=> {
     })
   })
   ctx.body = '开始导入数据'
+})
+
+// 获取首页商品信息
+router.get('/index', async(ctx)=> {
+  const Home = mongoose.model('Home');
+  try {
+    const res = await Home.find().exec();
+    ctx.body = {
+      code: 0,
+      data: res[0],
+      msg: res.length ? '获取成功' : '暂无数据'
+    }
+  } catch (err) {
+    ctx.body = {
+      code: 1,
+      msg: err.message || '获取商品数据失败'
+    }
+  }
 })
 
 // 获取所有商品信息
