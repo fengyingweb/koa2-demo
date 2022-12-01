@@ -208,13 +208,15 @@ router.post('/getGoodsListByCategorySubID', async(ctx)=> {
   let start = (pageNo - 1) * pageSize;
   try {
     const Goods = mongoose.model('Goods');
+    const total = await Goods.count({SUB_ID: categorySubId});
     const res = await Goods.find({SUB_ID: categorySubId}).skip(start).limit(pageSize).exec();
     ctx.body = {
       code: 0,
       data: {
         list: res,
         pageNo,
-        pageSize
+        pageSize,
+        total
       },
       msg: res.length ? '获取成功' : '暂无数据'
     }
