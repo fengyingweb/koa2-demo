@@ -11,8 +11,6 @@ router.get('/', async ctx => {
 router.post('/register', async(ctx)=> {
   // 获取model
   const User = mongoose.model('User');
-  const userId = new ObjectId()
-  console.log(userId)
   try {
     let result = await User.findOne({userName: ctx.request.body.userName}).exec();
     console.log(result)
@@ -24,6 +22,8 @@ router.post('/register', async(ctx)=> {
       }
     } else {
       // 接受post数据
+      const userId = new ObjectId()
+      console.log(userId)
       let newUser = new User({...ctx.request.body, userId});
       await newUser.save().then(()=> {
         ctx.body = {
