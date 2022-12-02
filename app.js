@@ -15,18 +15,20 @@ const router = new Router({
 // 子路由
 const user = require('./appApi/user.js');
 const goods = require('./appApi/goods.js');
+const shopCar = require('./appApi/shopCar.js');
 
 // 装载所有子路由
 router.use('/user', user.routes());
 router.use('/goods', goods.routes());
+router.use('/shopCar', shopCar.routes());
 
 // 加载路由中间件
 app
   .use(router.routes())
-  .use(router.allowedMethods())
+  .use(router.allowedMethods());
 
 
-;(async ()=> {
+(async ()=> {
   await connect();
   initSchemas();
 })();
