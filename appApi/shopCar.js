@@ -100,25 +100,40 @@ router.post('/batchDeleteCar', async (ctx)=> {
   const ShopCar = mongoose.model('ShopCar')
   const shopCarIds = ctx.request.body.shopCarIdList
   let count = 0
-  shopCarIds.forEach(id => {
-    const query = {shopCarId: id}
-    ShopCar.findOneAndRemove(query, (err)=> {
-      console.log(err)
-      if (err) {
-        ctx.body = {
-          code: 1,
-          data: false,
-          msg: err || '删除失败'
-        }
-        return
-      }
-      count += 1
+  const delMethods = ()=> {
+    return new Promise((resolve, reject)=> {
+      shopCarIds.forEach(id => {
+        const query = {shopCarId: id}
+        ShopCar.findOneAndRemove(query, (err)=> {
+          console.log(err)
+          if (err) {
+            reject(err)
+            return
+          }
+          count += 1
+          if (count === shopCarIds.length) {
+            resolve({count, isDelete: true})
+          }
+        })
+      })
     })
-  })
-  ctx.body = {
-    code: 0,
-    data: true,
-    msg: '删除成功'
+  }
+  try {
+    const result = await delMethods()
+    console.log(result)
+    if (result.isDelete) {
+      ctx.body = {
+        code: 0,
+        data: true,
+        msg: '删除成功'
+      }
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 1,
+      data: false,
+      msg: error || '删除失败'
+    }
   }
 })
 module.exports = router
