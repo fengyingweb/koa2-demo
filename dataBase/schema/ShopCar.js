@@ -9,7 +9,7 @@ const shopCarSchema = new Schema({
   price: Number,
   image: String,
   goodsNums: Number,
-  userId: String
+  userId: {unique: true, type: String}
 }, {collection: 'shopCar'})
 
 mongoose.model('ShopCar', shopCarSchema)
